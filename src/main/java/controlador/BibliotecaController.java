@@ -10,6 +10,7 @@ import modelo.Libro;
 import modelo.LibroDAO;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Servlet implementation class BibliotecaController
@@ -33,6 +34,15 @@ public class BibliotecaController extends HttpServlet {
 		// TODO Auto-generated method stub
 		RequestDispatcher despachador = null;
 		if(request.getServletPath().equals("")) {
+			try {
+				LibroDAO libroDAO = new LibroDAO();
+				ArrayList<Libro> libros;
+				libros = libroDAO.getLibros();
+				request.setAttribute("libros", libros);
+			}
+			catch(RuntimeException e) {
+				request.setAttribute("error", e.getMessage());
+			}
 			despachador = request.getServletContext().getRequestDispatcher("/index.jsp");
 		}else if (request.getServletPath().equals("/insertar")) {
 			try {
@@ -40,12 +50,13 @@ public class BibliotecaController extends HttpServlet {
 				Libro libro = new Libro(Integer.parseInt(request.getParameter("isbn")),
 						request.getParameter("titulo"), request.getParameter("autor"));
 				libroDAO.insertar(libro);
+				request.setAttribute("info", "Libro " + libro + " añadido");
 			}
 			catch(NumberFormatException e) {
-				request.setAttribute("error", e);
+				request.setAttribute("error", e.getMessage());
 			}
 			catch(RuntimeException e) {
-				request.setAttribute("error", e);
+				request.setAttribute("error", e.getMessage());
 			}
 			despachador = request.getServletContext().getRequestDispatcher("/");
 		}
