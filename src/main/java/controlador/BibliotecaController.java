@@ -37,7 +37,7 @@ public class BibliotecaController extends HttpServlet {
 			try {
 				LibroDAO libroDAO = new LibroDAO();
 				ArrayList<Libro> libros;
-				libros = libroDAO.getLibros();
+				libros = new ArrayList<Libro>(libroDAO.getLibros());
 				request.setAttribute("libros", libros);
 			}
 			catch(RuntimeException e) {
